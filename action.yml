@@ -17,6 +17,9 @@ inputs:
   commenter_workdir:
     description: 'The working directory in which .tf files resides'
     required: false
+  commenter_prefix:
+    description: 'The working directory in which .tf files resides'
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -25,3 +28,4 @@ runs:
     - ${{ inputs.commenter_input }}
     - ${{ inputs.commenter_exitcode }}
     - ${{ inputs.commenter_workdir }}
+    - ${{ inputs.commenter_prefix }}
