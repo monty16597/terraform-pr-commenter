@@ -33,6 +33,16 @@ COMMAND=$1
 INPUT=$(echo "$2" | sed 's/\x1b\[[0-9;]*m//g')
 # Arg 3 is the Terraform CLI exit code
 EXIT_CODE=$3
+# Arg 4 is working directory code
+WORK_DIR=$4
+
+if [[ -d $WORK_DIR ]]; then
+    echo "Chaning working directory to $WORK_DIR"
+    cd $WORK_DIR
+else
+    echo "Running on $PWD"
+fi
+
 
 # Read TF_WORKSPACE environment variable or use "default"
 WORKSPACE=${TF_WORKSPACE:-default}
