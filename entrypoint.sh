@@ -35,6 +35,8 @@ INPUT=$(echo "$2" | sed 's/\x1b\[[0-9;]*m//g')
 EXIT_CODE=$3
 # Arg 4 is working directory code
 WORK_DIR=$4
+# Arg 5 is comment header prefix
+PREFIX=$5
 
 if [[ -d $WORK_DIR ]]; then
     echo "Chaning working directory to $WORK_DIR"
@@ -92,7 +94,7 @@ if [[ $COMMAND == 'fmt' ]]; then
   # Meaning: 1 = Malformed Terraform CLI command. 2 = Terraform parse error.
   # Actions: Build PR comment.
   if [[ $EXIT_CODE -eq 1 || $EXIT_CODE -eq 2 ]]; then
-    PR_COMMENT="### Terraform \`fmt\` Failed
+    PR_COMMENT="### $PREFIX Terraform \`fmt\` Failed
 <details$DETAILS_STATE><summary>Show Output</summary>
 
 \`\`\`
@@ -117,7 +119,7 @@ $THIS_FILE_DIFF
 </details>"
     done
 
-    PR_COMMENT="### Terraform \`fmt\` Failed
+    PR_COMMENT="### $PREFIX Terraform \`fmt\` Failed
 $ALL_FILES_DIFF"
   fi
 
@@ -157,7 +159,7 @@ if [[ $COMMAND == 'init' ]]; then
   # Meaning: Terraform initialize failed or malformed Terraform CLI command.
   # Actions: Build PR comment.
   if [[ $EXIT_CODE -eq 1 ]]; then
-    PR_COMMENT="### Terraform \`init\` Failed
+    PR_COMMENT="### $PREFIX Terraform \`init\` Failed
 <details$DETAILS_STATE><summary>Show Output</summary>
 
 \`\`\`
@@ -200,7 +202,7 @@ if [[ $COMMAND == 'plan' ]]; then
     if [[ $COLOURISE == 'true' ]]; then
       CLEAN_PLAN=$(echo "$CLEAN_PLAN" | sed -r 's/^~/!/g') # Replace ~ with ! to colourise the diff in GitHub comments
     fi
-    PR_COMMENT="### Terraform \`plan\` Succeeded for Workspace: \`$WORKSPACE\`
+    PR_COMMENT="### $PREFIX Terraform \`plan\` Succeeded for Workspace: \`$WORKSPACE\`
 <details$DETAILS_STATE><summary>Show Output</summary>
 
 \`\`\`diff
@@ -258,7 +260,7 @@ if [[ $COMMAND == 'validate' ]]; then
   # Meaning: Terraform validate failed or malformed Terraform CLI command.
   # Actions: Build PR comment.
   if [[ $EXIT_CODE -eq 1 ]]; then
-    PR_COMMENT="### Terraform \`validate\` Failed
+    PR_COMMENT="### $PREFIX Terraform \`validate\` Failed
 <details$DETAILS_STATE><summary>Show Output</summary>
 
 \`\`\`
