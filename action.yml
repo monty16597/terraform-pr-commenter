@@ -14,6 +14,9 @@ inputs:
   commenter_exitcode:
     description: 'The exit code from a previous step output'
     required: true
+  commenter_workdir:
+    description: 'The working directory in which .tf files resides'
+    required: false
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -21,3 +24,4 @@ runs:
     - ${{ inputs.commenter_type }}
     - ${{ inputs.commenter_input }}
     - ${{ inputs.commenter_exitcode }}
+    - ${{ inputs.commenter_workdir }}
