@@ -225,16 +225,15 @@ $INPUT
   fi
 
   # Add plan comment to PR.
-  PR_PAYLOAD=$(echo '{}' | jq --arg body "$PR_COMMENT" '.body = $body')
-  if [[ `echo $PR_COMMENT | wc -m` -gt 65000 ]]; then
+  if [[ `echo $PR_COMMENT | wc -m` -gt 65536 ]]; then
 	PR_COMMENT="### Terraform \`plan\` Failed for Workspace: \`$WORKSPACE\`
 	<details$DETAILS_STATE><summary>Show Output</summary>
-	```Plan is too long, Github commment char limit is 65000 char```
+	```Plan is too long, Github commment char limit is 65536 char```
 	</details>"
   fi
+  PR_PAYLOAD=$(echo '{}' | jq --arg body "$PR_COMMENT" '.body = $body')
   echo -e "\033[34;1mINFO:\033[0m Adding plan comment to PR."
   curl -sS -X POST -H "$AUTH_HEADER" -H "$ACCEPT_HEADER" -H "$CONTENT_HEADER" -d "$PR_PAYLOAD" -L "$PR_COMMENTS_URL" > /dev/null
-
   exit 0
 fi
 
